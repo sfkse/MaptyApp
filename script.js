@@ -9,6 +9,10 @@ const inputDistance = document.querySelector('.form__input--distance');
 const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
+const deleteAll = document.querySelector('.delete__all');
+const workoutEdit = document.querySelectorAll('.edit__workout');
+
+
 
 class Workout {
     date = new Date();
@@ -74,6 +78,7 @@ class App {
         form.addEventListener('submit', this._newWorkout.bind(this))
         inputType.addEventListener('change', this._toggleElevationField)
         containerWorkouts.addEventListener('click', this._moveToPopup.bind(this))
+        deleteAll.addEventListener('click', this._resetAll);
     }
     _getPosition() {
         if (navigator.geolocation)
@@ -100,11 +105,13 @@ class App {
 
     }
 
-    _showForm(mapE) {
+    _showForm(mapE, editWorkout = null) {
         this.#mapEvent = mapE;
         form.classList.remove('hidden');
         inputDistance.focus()
         // console.log(this.#mapEvent)
+
+        if (editWorkout) return
     }
 
     _hideForm() {
@@ -166,6 +173,9 @@ class App {
 
         //Set local storage to all workouts
         this._setLocalStorage();
+
+        //Edit workout
+        this._editWorkout();
     }
 
     renderWorkoutMarker(workout) {
@@ -189,16 +199,17 @@ class App {
         let html = `
             <li class="workout workout--${workout.type}" data-id="${workout.id}">
                 <h2 class="workout__title">Running on April 14</h2>
+                <button class="workout__edit" data-id="${workout.id}">EDIT</button>
                 <div class="workout__details">
                     <span class="workout__icon">${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'}</span>
                     <span class="workout__value">${workout.distance}</span>
                     <span class="workout__unit">km</span>
                 </div >
-            <div class="workout__details">
-                <span class="workout__icon">⏱</span>
-                <span class="workout__value">${workout.duration}</span>
-                <span class="workout__unit">min</span>
-            </div>
+                <div class="workout__details">
+                    <span class="workout__icon">⏱</span>
+                    <span class="workout__value">${workout.duration}</span>
+                    <span class="workout__unit">min</span>
+                </div>
         `;
 
         if (workout.type === 'running') {
@@ -236,6 +247,13 @@ class App {
     }
 
     _moveToPopup(e) {
+
+        const editWork = e.target.closest('.workout').childNodes[3]
+        console.log(editWork)
+        editWork.style.visibility = 'visible'
+
+        // editWork.addEventListener('click', this._editWorkout.bind(this))
+
         const workoutEl = e.target.closest('.workout')
         if (!workoutEl) return
         const workout = this.#workouts.find(work => work.id === workoutEl.dataset.id)
@@ -246,6 +264,7 @@ class App {
                 duration: 1
             }
         });
+
     }
 
     _setLocalStorage() {
@@ -261,10 +280,17 @@ class App {
 
         this.#workouts.forEach(work => this._renderWorkout(work))
     }
+
+    _resetAll() {
+        localStorage.removeItem('workouts')
+        location.reload()
+
+    }
+
 }
 
 const app = new App();
-app._getPosition()
+
 
 
 

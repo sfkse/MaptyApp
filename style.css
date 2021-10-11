@@ -87,7 +87,7 @@ a:visited {
 .workout__title {
   font-size: 1.7rem;
   font-weight: 600;
-  grid-column: 1 / -1;
+  grid-column: 1 / 4;
 }
 
 .workout__details {
@@ -111,6 +111,20 @@ a:visited {
   color: var(--color-light--1);
   text-transform: uppercase;
   font-weight: 800;
+}
+
+.workout__edit {
+  grid-column: 4 / 5;
+  border: none;
+  background-color: #00c46a;
+  color: #ececec;
+  font-size: 1rem;
+  width: max-content;
+  padding: 0 10px;
+  border-radius: 5px;
+  justify-self: self-end;
+  cursor: pointer;
+  visibility: hidden;
 }
 
 .form {
@@ -171,22 +185,18 @@ a:visited {
   display: none;
 }
 
-.copyright {
-  margin-top: auto;
-  font-size: 1.3rem;
-  text-align: center;
-  color: var(--color-light--1);
-}
-
-.twitter-link:link,
-.twitter-link:visited {
-  color: var(--color-light--1);
-  transition: all 0.2s;
-}
-
-.twitter-link:hover,
-.twitter-link:active {
-  color: var(--color-light--2);
+.delete__all {
+  border: none;
+  background-color: #f00323;
+  width: 200px;
+  padding: 10px;
+  color: #ececec;
+  align-self: center;
+  border-radius: 5px;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
 }
 
 /* MAP */
