@@ -10,7 +10,6 @@ let inputDuration = document.querySelector('.form__input--duration');
 let inputCadence = document.querySelector('.form__input--cadence');
 let inputElevation = document.querySelector('.form__input--elevation');
 const deleteAll = document.querySelector('.delete__all');
-const editWorkout = document.querySelector('.workout__edit');
 
 
 
@@ -78,7 +77,6 @@ class App {
         form.addEventListener('submit', this._newWorkout.bind(this))
         inputType.addEventListener('change', this._toggleElevationField)
         containerWorkouts.addEventListener('click', this._moveToPopup.bind(this))
-        // editWorkout.addEventListener('click', this._showForm.bind(this))
         deleteAll.addEventListener('click', this._resetAll);
     }
     _getPosition() {
@@ -108,7 +106,6 @@ class App {
 
     _showForm(mapE) {
         inputCadence.value = inputDuration.value = inputDistance.value = inputElevation.value = "";
-        console.log(mapE)
         this.#mapEvent = mapE;
         form.classList.remove('hidden');
         inputDistance.focus()
@@ -200,8 +197,7 @@ class App {
         let html = `
             <li class="workout workout--${workout.type}" data-id="${workout.id}">
                 <h2 class="workout__title">${workout.type.toUpperCase()} on April 14</h2>
-                <button type="button" class="workout__edit" data-id="${workout.id}">EDIT</button>
-                <div class="workout__details">
+                    <div class="workout__details">
                     <span class="workout__icon">${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'}</span>
                     <span class="workout__value">${workout.distance}</span>
                     <span class="workout__unit">km</span>
@@ -248,7 +244,6 @@ class App {
     }
 
     _moveToPopup(e) {
-        console.log(e.target)
         form.classList.add('hidden');
         const workoutEl = e.target.closest('.workout')
         if (!workoutEl) return
@@ -261,47 +256,11 @@ class App {
             }
         });
         // console.log(e.target.closest('.workouts'))
-        this._showEditButton(e.target)
 
 
-    }
-
-    _showEditButton(e) {
-
-        const items = document.querySelectorAll('.workout__edit')
-        console.log(items)
-        items.forEach(item => item.style.visibility = 'hidden')
-        const editWorkouts = e.closest('.workout').children[1]
-        editWorkouts.style.visibility = 'visible'
-
-        this._editWorkout(e)
-    }
-
-    _editWorkout(workout) {
-        const button = document.querySelector('.workout__edit')
-        console.log(workout)
-        if (workout.dataset.id && workout.className === 'workout__edit') {
-            form.classList.remove('hidden');
-            const selectWork = this.#workouts.find(work => work.id === workout.dataset.id)
-            // console.log(this.#workouts)
-            console.log(selectWork)
-            inputDistance.value = +selectWork.distance
-            inputDuration.value = +selectWork.duration
-            inputCadence.value = +selectWork.cadence
-            inputElevation.value = +selectWork.elevationGain
-            inputType.value = selectWork.type
-
-        }
-
-
-        // console.log(!isNaN(inputCadence.value) ? inputCadence.value : 'no value')
-        // form.addEventListener('submit', this._updateWorkout)
 
     }
 
-    _updateWorkout() {
-        console.log('e, this')
-    }
 
     _setLocalStorage() {
         localStorage.setItem('workouts', JSON.stringify(this.#workouts));
@@ -318,7 +277,6 @@ class App {
     }
 
     _resetAll() {
-        console.log('clicked')
         localStorage.removeItem('workouts')
         location.reload()
 
